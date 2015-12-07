@@ -1,4 +1,6 @@
 # coding: utf-8
+
+import json
 import urllib
 import csv
 import urlparse
@@ -51,21 +53,15 @@ class BaseSpider(Spider):
             results = data.get('results', [])
             if len(results) == 1: ## one place
                 self.result_file.writerow([
-                    task.place['url'].encode('utf-8'),
                     task.place['title'].encode('utf-8'),
                     results[0].get('place_id')
                 ])
                 # Increment place counter
                 self.result_counter += 1
             elif len(results) > 1:
-                pass
                 ## TODO find google api place if results more then 1
-                ## yield Task('place_detail', url=task.place['url'], place=place)
+                url = urlparse.urljoin(self.domain, task.place['url'])
+                yield Task('place_detail', url=url, place=task.place, google_data=results)
 
     def task_place_detail(self, grab, task):
-        print 'Find place detail lat, lon params for %s' % task.place['title']
-        map = grab.doc.tree.cssselect('[data-module="map"]')
-        if len(map):
-            params = map[0].attrib('data-params')
-            params = json.loads(params) ## get lat, lon attrs
-
+        print 'Find place detail lat, lng params for %s' % task.place['title']
