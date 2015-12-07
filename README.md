@@ -24,5 +24,9 @@ Now is working timeout.com parser and departures.com parser. Example:
 
 ```./spider.py --engine='dep' --url='/top-burgers-around-world'```
 
+```./spider.py --engine='nyt' --url='/reviews/dining'```
+
+```./spider.py --engine='nyt' --url='/2014/12/31/dining/nyc-best-new-restaurants-2014.html'```
+
 ## SIC!
 Change your `GOOGLE_API_KEY`
