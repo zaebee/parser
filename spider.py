@@ -3,6 +3,7 @@ import urllib
 import csv
 import logging
 import argparse
+import urlparse
 
 from grab.spider import Spider, Task
 
@@ -21,7 +22,8 @@ class BaseSpider(Spider):
         # Prepare the file handler to save results.
         # The method `prepare` is called one time before the
         # spider has started working
-        filename = self.config.get('url', 'result.txt')
+        filename = self.config.get('url')
+        filename = filename.replace('/', '-')
         self.result_file = csv.writer(open(filename, 'w'))
 
         # This counter will be used to enumerate found images
@@ -29,8 +31,10 @@ class BaseSpider(Spider):
         self.result_counter = 0
 
     def task_generator(self):
+        domain = self.config.get('domain')
         url = self.config.get('url')
-        if url:
+        if url and domain:
+            url = urlparse.urljoin(domain, url)
             yield Task('page', url=url)
 
     def task_page(self, grab, task):
@@ -79,12 +83,16 @@ if __name__ == '__main__':
     parser.add_argument("-u", "--url",
                         dest="url",
                         help="Set page url for parsing places")
+    parser.add_argument("-domain", "--domain",
+                        dest="domain",
+                        help="Set domain for parsing")
     arguments = parser.parse_args()
 
     bot = BaseSpider(
         thread_number=2,
         config={
-            'url': arguments.url
+            'url': arguments.url,
+            'domain': arguments.domain
         }
     )
     bot.run()
