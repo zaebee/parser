@@ -5,13 +5,11 @@ import urlparse
 
 from grab.spider import Spider, Task
 
-GOOGLE_PLACE_URL = 'https://maps.googleapis.com/maps/api/place/textsearch/json?query=%s&key=%s'
-GOOGLE_API_KEY = 'AIzaSyBysqUovlPKigIp5bmNYcEygcrrvXl9tYA'
-
 
 class BaseSpider(Spider):
-    selectors = [
-    ]
+    GOOGLE_PLACE_URL = 'https://maps.googleapis.com/maps/api/place/textsearch/json?query=%s&key=%s'
+    GOOGLE_API_KEY = 'AIzaSyBysqUovlPKigIp5bmNYcEygcrrvXl9tYA'
+    selectors = []
 
     def prepare(self):
         # Prepare the file handler to save results.
@@ -20,16 +18,16 @@ class BaseSpider(Spider):
         filename = self.config.get('url')
         filename = filename.strip('/').replace('/', '-')
         self.result_file = csv.writer(open(filename, 'w'))
+        self.domain = self.config.get('domain')
+        self.base_url = self.config.get('url')
 
         # This counter will be used to enumerate found images
         # to simplify image file naming
         self.result_counter = 0
 
     def task_generator(self):
-        domain = self.config.get('domain')
-        url = self.config.get('url')
-        if url and domain:
-            url = urlparse.urljoin(domain, url)
+        if self.base_url and self.domain:
+            url = urlparse.urljoin(self.domain, self.base_url)
             yield Task('page', url=url)
 
     def task_page(self, grab, task):
