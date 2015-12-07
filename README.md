@@ -12,9 +12,9 @@
 Available 3 backends:
 - `dep` - departures.com
 - `tmout` - timeout.com
-- `nyt` - nytimes.com (Not implemented)
+- `nyt` - nytimes.com
 
-Now is working timeout.com parser and departures.com parser. Example:
+Examples:
 
 ```./spider.py --engine='tmout' --url='/newyork/restaurants/the-100-best-dishes-in-new-york-city-2014-best-pizza'```
 
