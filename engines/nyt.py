@@ -7,5 +7,6 @@ class Spider(BaseSpider):
     """ nytimes.com parser """
 
     selectors = [
-        '.story-body-text.story-content a'
+        '.story-body-text.story-content a',
+        '.story-meta h2'
     ]

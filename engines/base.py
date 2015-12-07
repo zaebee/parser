@@ -38,10 +38,10 @@ class BaseSpider(Spider):
             elements = grab.doc.tree.cssselect(selector)
             if len(elements):
                 for elem in elements:
-                    print 'Place title:', elem.text
+                    print 'Place title:', elem.text.strip()
                     place = {
                         'url': elem.get('href'),
-                        'title': elem.text,
+                        'title': elem.text.strip(),
                     }
                     url = self.GOOGLE_PLACE_URL % (place['title'], self.GOOGLE_API_KEY)
                     yield Task('google_place', url=url, place=place)
