@@ -11,6 +11,7 @@ from grab.spider import Spider, Task
 class BaseSpider(Spider):
     GOOGLE_PLACE_URL = 'https://maps.googleapis.com/maps/api/place/textsearch/json?query=%s&key=%s'
     GOOGLE_API_KEY = 'AIzaSyBysqUovlPKigIp5bmNYcEygcrrvXl9tYA'
+    GOOGLE_API_KEY = 'AIzaSyDMPRPS4ALxQVBoNrqApWBY1x2YQPjzpsg'
     selectors = []
 
     def prepare(self):
