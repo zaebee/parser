@@ -2,8 +2,10 @@
 
 ## install
 
-``` virtualenv .env
-``` pip install grab
+``` virtualenv .env```
+``` source .env/bin/activate```
+
+``` pip install grab```
 
 ## run
 Available 3 backends:
@@ -20,3 +22,6 @@ Now is working timeout.com parser and departures.com parser. Example:
 ```./spider.py --engine='dep' --url='/10-new-york-cocktail-bars'```
 
 ```./spider.py --engine='dep' --url='/top-burgers-around-world'```
+
+## SIC
+Change your `GOOGLE_API_KEY`
