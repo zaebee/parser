@@ -26,7 +26,7 @@ class Spider(BaseSpider):
                     url = self.GOOGLE_PLACE_URL % (place['title'], self.GOOGLE_API_KEY)
                     yield Task('google_place', url=url, place=place)
 
-            next_slide = grab.doc.tree.cssselect('.slide-text a')
+            next_slide = grab.doc.tree.cssselect(self.next_slide_selectors)
             if len(next_slide):
                 next_slide = next_slide[0]
                 url = urlparse.urljoin(self.domain, next_slide.get('href'))

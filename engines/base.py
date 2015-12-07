@@ -41,7 +41,7 @@ class BaseSpider(Spider):
                         'url': elem.get('href'),
                         'title': elem.text,
                     }
-                    url = GOOGLE_PLACE_URL % (place['title'], GOOGLE_API_KEY)
+                    url = self.GOOGLE_PLACE_URL % (place['title'], self.GOOGLE_API_KEY)
                     yield Task('google_place', url=url, place=place)
 
     def task_google_place(self, grab, task):
