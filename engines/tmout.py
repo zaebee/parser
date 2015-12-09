@@ -10,6 +10,7 @@ class Spider(BaseSpider):
     selectors = [
         'div.slideshow .feature-item__text h3 a',
         'div.medium_list .feature-item__column h3 a',
+        'div.medium_list .feature-item__column h3',
         'div.small_list .feature-item__column h3 a'
     ]
 

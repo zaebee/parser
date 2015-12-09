@@ -22,7 +22,7 @@ class Spider(BaseSpider):
                     address = elem.body.cssselect('.field-content em:last-child')
                     if len(address):
                         address = address[0]
-                        address = address.text.split(';').pop(0) ## trim `phone;`
+                        address = address.text_content().split(';').pop(0) ## trim `phone;`
                     else:
                         continue ## If no address then is not a place.
                     title = '%s %s' % (elem.text, address)
