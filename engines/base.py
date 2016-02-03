@@ -6,7 +6,7 @@ from grab.spider import Spider, Task
 from instagram.models import Media
 
 
-class BaseSpider(Spider):
+class InstaSpider(Spider):
     API_ACCESS_TOKEN = '2887062364.edc9621.8c1d23b875374cebb765da67b96e022c'
     API_TAGS_URL = 'https://api.instagram.com/v1/tags/%s/media/recent?count=%s&access_token=%s'
     COUNT = 100

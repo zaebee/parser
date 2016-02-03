@@ -18,7 +18,7 @@ if __name__ == '__main__':
     arguments = parser.parse_args()
     engine = importlib.import_module('engines.%s' % arguments.engine)
 
-    bot = engine.Spider(
+    bot = engine.InstaSpider(
         thread_number=2,
         config={
             'hashtag': arguments.hashtag,

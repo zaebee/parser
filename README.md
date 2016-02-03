@@ -20,4 +20,6 @@ Examples:
 
 
 ## SIC!
-You need sef  `Instagram API_ACCESS_TOKEN`
+You need set `Instagram API_ACCESS_TOKEN`. Now if hardcoded to Spider `prepare` method.
+
+Alse you need install system packages `sudo apt-get install libcurl4-openssl-dev libxslt1-dev libxml2-dev`
