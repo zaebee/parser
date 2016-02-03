@@ -8,7 +8,8 @@
 
 ``` pip install grab```
 
-``` pip install python-instagram```
+We need `python-instagram` lib but official repo has a bug https://github.com/Instagram/python-instagram/issues/214, so I install fork:
+```pip install -e "git+https://github.com/skywritergr/python-instagram.git#egg=instagram"```
 
 ## run
 
