@@ -21,6 +21,6 @@ Examples:
 
 
 ## SIC!
-You need set Instagram `API_ACCESS_TOKEN`. Now I hardcoded my token into Spider `prepare` method.
+You need set Instagram `API_ACCESS_TOKEN`. I hardcoded my token into Spider `prepare` method.
 
 Alse you need install system packages `sudo apt-get install libcurl4-openssl-dev libxslt1-dev libxml2-dev`
