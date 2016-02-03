@@ -1,68 +1,48 @@
-# coding: utf-8
+# -*- coding: utf-8 -*-
 
-import json
-import urllib
 import csv
-import urlparse
-
+from datetime import datetime
 from grab.spider import Spider, Task
+from instagram.models import Media
 
 
 class BaseSpider(Spider):
-    GOOGLE_PLACE_URL = 'https://maps.googleapis.com/maps/api/place/textsearch/json?query=%s&key=%s'
-    GOOGLE_API_KEY = 'AIzaSyBysqUovlPKigIp5bmNYcEygcrrvXl9tYA'
-    GOOGLE_API_KEY = 'AIzaSyDMPRPS4ALxQVBoNrqApWBY1x2YQPjzpsg'
-    selectors = []
+    API_ACCESS_TOKEN = '2887062364.edc9621.8c1d23b875374cebb765da67b96e022c'
+    API_TAGS_URL = 'https://api.instagram.com/v1/tags/%s/media/recent?count=%s&access_token=%s'
+    COUNT = 100
 
     def prepare(self):
         # Prepare the file handler to save results.
         # The method `prepare` is called one time before the
         # spider has started working
-        filename = self.config.get('url')
-        filename = filename.strip('/').replace('/', '-')
-        self.result_file = csv.writer(open(filename, 'w'))
-        self.domain = self.config.get('domain')
-        self.base_url = self.config.get('url')
+        hashtag = self.config.get('hashtag')
+        date = datetime.now().strftime('%Y%m%d%H%M')
+        filename = '%s_%s.csv' % (date, hashtag)
 
-        # This counter will be used to enumerate found images
-        # to simplify image file naming
+        self.result_file = csv.writer(open(filename, 'w'))
+        self.base_url = self.API_TAGS_URL % (hashtag, self.COUNT, self.API_ACCESS_TOKEN)
+
+        # This counter will be used to enumerate found media
+        # to simplify media file naming
         self.result_counter = 0
 
     def task_generator(self):
-        if self.base_url and self.domain:
-            url = urlparse.urljoin(self.domain, self.base_url)
-            yield Task('page', url=url)
+        yield Task('hashtag', url=self.base_url)
 
-    def task_page(self, grab, task):
-        print 'Initial page', task.url
-        for selector in self.selectors:
-            elements = grab.doc.tree.cssselect(selector)
-            if len(elements):
-                for elem in elements:
-                    print 'Place title:', elem.text.strip()
-                    place = {
-                        'url': elem.get('href'),
-                        'title': elem.text.strip(),
-                    }
-                    url = self.GOOGLE_PLACE_URL % (place['title'], self.GOOGLE_API_KEY)
-                    yield Task('google_place', url=url, place=place)
+    def task_hashtag(self, grab, task):
+        data = grab.doc.json
+        status_code = data.get('meta', {}).get('code')
+        next_url = data.get('pagination', {}).get('next_url')
 
-    def task_google_place(self, grab, task):
-        print 'Google place id search result for %s' % task.place['title']
-        data = grab.response.json
-        if data.get('status') == 'OK':
-            results = data.get('results', [])
-            if len(results) == 1: ## one place
-                self.result_file.writerow([
-                    task.place['title'].encode('utf-8'),
-                    results[0].get('place_id')
-                ])
-                # Increment place counter
-                self.result_counter += 1
-            elif len(results) > 1:
-                ## TODO find google api place if results more then 1
-                url = urlparse.urljoin(self.domain, task.place['url'])
-                yield Task('place_detail', url=url, place=task.place, google_data=results)
-
-    def task_place_detail(self, grab, task):
-        print 'Find place detail lat, lng params for %s' % task.place['title']
+        if next_url:
+            yield Task('hashtag', url=next_url)
+        for element in data.get('data'):
+            media = Media.object_from_dictionary(element)
+            self.result_file.writerow([
+                media.id,
+                media.link,
+                media.like_count,
+                media.caption,
+            ])
+            # Increment saved media counter
+            self.result_counter += 1
